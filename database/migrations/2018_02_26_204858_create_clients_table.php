@@ -15,6 +15,17 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->string('document_number'); //modificar o tamanho do campo cpf/cnpj
+            $table->string('email');
+            $table->string('phone');
+            $table->boolean('defaulter'); //inadimplente
+            $table->date('date_birth')->nullable();
+            $table->char('sex')->nullable();
+            $table->enum('marital_status',array_keys(\App\Client::MARITAL_STATUS))->nullable();
+            $table->string('physical_disability')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('client_type')->nullable();
             $table->timestamps();
         });
     }
