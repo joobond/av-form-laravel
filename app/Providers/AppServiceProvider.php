@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Validator::extend('document_number', function($attribute,$value,$parameters,$validator){
+            $documentValidator = $parameters[0] =='cpf'?new Cpf():new Cnpj();
+            return $documentValidator->isValid($value);
+        });
     }
 
     /**
@@ -23,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(\Faker\Generator::class, function () {
+            return \Faker\Factory::create('pt_BR');
+        });
     }
 }
