@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Client;
@@ -36,9 +37,9 @@ class ClientsController extends Controller //ControllerResource
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientRequest $request)
     {
-        $data = $this->_validate($request);
+        $data = $request->only(array_keys($request->rules()));
         $data['defaulter']= $request->has('defaulter');
         $data['client_type'] = Client::getClientType($request->client_type);
         Client::create($data);
@@ -74,9 +75,9 @@ class ClientsController extends Controller //ControllerResource
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(ClientRequestest $request, Client $client)
     {
-        $data = $this->_validate($request);
+        $data = $request->only(array_keys($request->rules()));
         $data['defaulter']= $request->has('defaulter');
         $client->fill($data);
         $client->save();
@@ -95,30 +96,4 @@ class ClientsController extends Controller //ControllerResource
         return redirect()->route('clients.index');
     }
 
-    protected function _validate(Request $request){
-        //Validando os campos do meu formulário
-        $client_type = Client::getClientType($request->client_type);
-        $documentNumberType = $client_type == Client::TYPE_INDIVIDUAL?'cpf':'cnpj';
-        $client = $request->route('client');
-        $client_id = $client instanceof Client?$client->id:null;
-        $rules=[
-            'name' => 'required|max:255',
-            'document_number' => "required|unique:clients,document_number,$client_id|document_number:$documentNumberType",
-            'email' => 'required|email',
-            'phone' => 'required',
-        ];
-        $marital_status= implode(',',array_keys(Client::MARITAL_STATUS));
-        $rulesIndividual = [
-            'date_birth' => 'required|date',
-            'marital_status' => "required|in:$marital_status",
-            'sex' => 'required|in:m,f',
-            'physical_disability' => 'max:255',
-        ];
-        $rulesLegal = [
-            'company_name' =>'required|max:255',
-        ];
-
-        return $this->validate($request,$client_type == Client::TYPE_INDIVIDUAL ?
-            $rules+$rulesIndividual:$rules+$rulesLegal);
-    }
 }
