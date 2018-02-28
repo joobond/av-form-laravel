@@ -16,6 +16,7 @@ class ClientsController extends Controller //ControllerResource
      */
     public function index()
     {
+        \Session::flash('chave','valor');
         $clients= \App\Client::all();
         return view('admin.clients.index',compact('clients'));
     }
@@ -43,7 +44,9 @@ class ClientsController extends Controller //ControllerResource
         $data['defaulter']= $request->has('defaulter');
         $data['client_type'] = Client::getClientType($request->client_type);
         Client::create($data);
+        \Session::flash('message','Cliente cadastrado com sucesso!');
         return redirect()->route('clients.index');
+
     }
 
     /**
@@ -75,12 +78,13 @@ class ClientsController extends Controller //ControllerResource
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(ClientRequestest $request, Client $client)
+    public function update(ClientRequest $request, Client $client)
     {
         $data = $request->only(array_keys($request->rules()));
         $data['defaulter']= $request->has('defaulter');
         $client->fill($data);
         $client->save();
+        \Session::flash('message','Cliente atualizado com sucesso!');
         return redirect()->route('clients.index');
     }
 
