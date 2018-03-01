@@ -44,8 +44,8 @@ class ClientsController extends Controller //ControllerResource
         $data['defaulter']= $request->has('defaulter');
         $data['client_type'] = Client::getClientType($request->client_type);
         Client::create($data);
-        \Session::flash('message','Cliente cadastrado com sucesso!');
-        return redirect()->route('clients.index');
+        //\Session::flash('message','Cliente cadastrado com sucesso!');
+        return redirect()->route('clients.index')->with('message','Cliente cadastrado com sucesso!');
 
     }
 
@@ -84,8 +84,8 @@ class ClientsController extends Controller //ControllerResource
         $data['defaulter']= $request->has('defaulter');
         $client->fill($data);
         $client->save();
-        \Session::flash('message','Cliente atualizado com sucesso!');
-        return redirect()->route('clients.index');
+        //\Session::flash('message','Cliente atualizado com sucesso!');
+        return redirect()->route('clients.index')->with('message','Cliente atualizado com sucesso!');
     }
 
     /**
@@ -97,7 +97,7 @@ class ClientsController extends Controller //ControllerResource
     public function destroy(Client $client)
     {
         $client->delete();
-        return redirect()->route('clients.index');
+        return redirect()->route('clients.index')->with('message','Cliente excluído com sucesso!');
     }
 
 }

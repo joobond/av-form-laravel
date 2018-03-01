@@ -8,10 +8,14 @@
     <a href="{{route('clients.edit',['client'=>$client->id])}}" class="btn btn-primary">Editar</a>
     <a href="{{route('clients.destroy',['client'=>$client->id])}}" class="btn btn-danger" onclick="event.preventDefault();
             if(confirm('Deseja excluir {{$client->name}}?')){document.getElementById('form-delete').submit();}">Excluir</a>
+    <!--
     <form id="form-delete" style="display: none" action="{{route('clients.destroy',['client'=>$client->id])}}" method="post">
         {{csrf_field()}}
         {{method_field('DELETE')}}
     </form>
+    -->
+    {{Form::open(['route'=>['clients.destroy',$client->id],'method'=>'DELETE','id'=>'form-delete'])}}
+    {{Form::close()}}
     <br><br>
     <table class="table table-bordered">
         <tbody>

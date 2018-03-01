@@ -6,9 +6,9 @@
     <h3>Editar Cliente</h3>
     <a href="{{\Illuminate\Support\Facades\URL::previous() }}" class="btn btn-dark">Voltar</a>
     @include('form._forms_errors')
-    <form method="post" action="{{route('clients.update',['client'=>$client->id])}}">
-        {{method_field('PUT')}}
-        @include('admin.clients._form')
-        <button type="submit" class="btn btn-success btn-lg btn-block">Salvar</button>
-    </form>
+    <!-- <form method="post" action="{{route('clients.update',['client'=>$client->id])}}"> -->
+    {{Form::model($client,['route'=>['clients.update',$client->id],'method'=>'PUT'])}}
+    @include('admin.clients._form')
+    <button type="submit" class="btn btn-success btn-lg btn-block">Salvar</button>
+    {{Form::close()}}
 @endsection
